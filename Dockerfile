@@ -20,6 +20,10 @@ RUN pecl install apcu \
 RUN docker-php-ext-install sockets exif opcache xml soap mbstring pdo_mysql zip \
   && docker-php-ext-install bcmath
 
+# Todo Add Xdebug only por development
+# RUN pecl install xdebug-2.8.1 \
+#  && docker-php-ext-enable xdebug
+
 # Clear
 RUN pecl clear-cache
 
@@ -29,6 +33,16 @@ RUN apk add --no-cache \
   && docker-php-ext-install -j$(nproc) intl \
   && docker-php-ext-enable intl \
   && rm -rf /tmp/*
+
+# Install amqp extension
+RUN apk add --no-cache \
+  rabbitmq-c-dev \
+  && pecl install amqp \
+  && docker-php-ext-enable amqp \
+  && rm -rf /tmp/*
+
+# Install wkhtmltopdf
+RUN apk add --no-cache wkhtmltopdf
 
 # fix work iconv library with alphine
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted gnu-libiconv
